@@ -80,6 +80,51 @@ Observed values:
 - `$03` Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: (SRAM)[#sram] for more details
 - `$06` Maps RTC registers to SRAM area. See (RTC)[#rtc]
 
+## ROM loading related
+
+### $7F37: Configure MBC
+
+This register configures the MBC to be used by the cart. Currently assume this is only prepared, and not applied, as the loader ROM is still running from ROM when this is written.
+
+TODO: Note which values are which MBC.
+
+### $7FC1, $7FC2: Configure ROM size/mask
+
+$7FC1 and $7FC2 combine into a single 16bit mask value. $7FC1 is lower 8 bits. This configures the amount of available ROM space to address from the MBC.
+
+For example $0003 is written if there are 4 ROM pages available.
+
+### $7FC3: Header checksum?
+
+For some magical reason the checksum of the target ROM header is written here. Reason is unknown.
+
+### $7FC4: SRAM Size/mask
+
+$7FC4 follows the pattern of $7FC1/$7FC2, but configures the mask for SRAM access. $00 is written if there is no SRAM available, else it sets up the amount of SRAM banks.
+
+### $7FE0: Reset to loader ROM
+
+This is written to $80 to reset the cart and load the new rom. This is done from WRAM by the `loader`.
+
+### $7F36: ROM Loading commands
+
+This maps ROM loading information to the SRAM area. This is used from WRAM as ROM will be changed.
+
+Observed values:
+
+- `$00` Unmap SRAM area
+- `$01` Map `ROM Load command` data into SRAM area. See (ROM Load data)[#rom-load-data]
+- `$03` Map ROM Load status into SRAM area. $A000 reads as $02 when rom loading is done.
+
+### $7FD4: Unknown
+
+This is written to $00 during preperation to load a rom. Reason unknown.
+
+### $7F31, $7F32: Unknown
+
+These are written to $00 after a rom is loaded before a reset to this new rom. Reason unknown.
+
+These are written to $00 and $80 by the `stage1` after the `loader` is loader. Reason unknown.
 
 # SRAM
 
@@ -104,3 +149,19 @@ Known mapped data is:
 `$A00C`: ??
 `$A00D`: BCD encoded month number
 `$A00E`: BCD encoded last 2 digits of the year
+
+# ROM Load Data
+
+To load a rom 512 bytes of data is loaded into the `ROM Load command` data. These are 128 32bit integers.
+This data is used to load the ROM from the SD card. It contains a list of SD card sectors to read into the ROM. It is a list of start sector with amount of sectors to read. Depending on the fragmentation on the SD card it will only need one or a few entries.
+
+(Note, when observing this in the `loader`, the used buffer isn't cleared and unwritten data still contain the first 512 bytes of the loaded ROM)
+
+General structure is:
+
+`INT32[0]`: Value 0, reason unknown.
+`INT32[1..X]`: Pairs of 2 integers. First the start sector to start reading from, and next the amount of sectors to read. When there is no more fragmentation the last size is $FFFFFFFF
+`INT32[$7C]: Size of the to be loaded ROM in bytes.
+`INT32[$7D]: Value 1, reason unknown.
+`INT32[$7E]: Value 4, reason unknown.
+`INT32[$7F]: Value 0, reason unknown.
