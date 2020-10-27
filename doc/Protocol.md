@@ -53,9 +53,9 @@ Use the $7FBx registers to configure which SD Sector to read.
 
 Observed possible values:
 
-- 0) Unmap the SD Card from SRAM
-- 1) Map SD Card sector data to SRAM, data will be available at $A000-$A200 (unknown if this wraps)
-- 3) Map SD Card read status to SRAM, status is available at $A000, $01 indicates read is done. (usage seems to be to wait till reading is done)
+- `$00` Unmap the SD Card from SRAM
+- `$01` Map SD Card sector data to SRAM, data will be available at $A000-$A200 (unknown if this wraps)
+- `$03` Map SD Card read status to SRAM, status is available at $A000, $01 indicates read is done. (usage seems to be to wait till reading is done)
 
 ### $7FB0, $7FB1, $7FB2, $7FB3: SD Card Sector number
 
@@ -75,10 +75,10 @@ This register is used to map different things into the SRAM area.
 
 Observed values:
 
-- 0) Unmap SRAM area
-- 2) Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
-- 3) Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: (SRAM)[#sram] for more details
-- 6) Maps RTC registers to SRAM area. See (RTC)[#rtc]
+- `$00` Unmap SRAM area
+- `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
+- `$03` Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: (SRAM)[#sram] for more details
+- `$06` Maps RTC registers to SRAM area. See (RTC)[#rtc]
 
 
 # SRAM
