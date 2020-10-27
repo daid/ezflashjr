@@ -2,6 +2,8 @@ Here the general structure and process of the EZFlashJr flash cart is documented
 
 # Terminology
 
+| Name   | Description |
+| ------ | ----- |
 | stage1 | This is a 32KB initial loader that is builtin to the cartridge. Dumped version is available in /boot/ |
 | loader | This is the code that is located on the SD card called ezgb.dat, which is just a rom file |
 | rom area | This updatable area inside the cart that contains the current rom |
