@@ -133,8 +133,12 @@ TODO... this is most likely loader specific, not Cart specific. And just SRAM fo
 - Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
 - Page $12 is used as extra RAM during the loader.
 
-- `$11:$A000` is `$AA` if there is SRAM data to be backed up. Rest of workings not yet known.
+- `$11:$A000` is `$AA` if there is SRAM data to be backed up.
+- `$11:$A001` is size of the SRAM to bankup in number of SRAM banks.
+- `$11:$A00F` length of the SRAM save file filename
+- `$11:$A010+` contains sram save file if save needs to be backed up (in wchar_t)
 - `$11:$A201` is written to `$88` to indicate cart initialization, if this isn't read back on boot of the loader it reports "Battery dry"
+- `$11:$A300+` contains the last loaded rom filename (in wchar_t)
 
 # RTC
 
