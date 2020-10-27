@@ -77,8 +77,8 @@ Observed values:
 
 - `$00` Unmap SRAM area
 - `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
-- `$03` Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: (SRAM)[#sram] for more details
-- `$06` Maps RTC registers to SRAM area. See (RTC)[#rtc]
+- `$03` Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
+- `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
 ## ROM loading related
 
@@ -113,7 +113,7 @@ This maps ROM loading information to the SRAM area. This is used from WRAM as RO
 Observed values:
 
 - `$00` Unmap SRAM area
-- `$01` Map `ROM Load command` data into SRAM area. See (ROM Load data)[#rom-load-data]
+- `$01` Map `ROM Load command` data into SRAM area. See [ROM Load data](#rom-load-data)
 - `$03` Map ROM Load status into SRAM area. $A000 reads as $02 when rom loading is done.
 
 ### $7FD4: Unknown
@@ -130,11 +130,11 @@ These are written to $00 and $80 by the `stage1` after the `loader` is loader. R
 
 TODO... this is most likely loader specific, not Cart specific. And just SRAM for "general usage". Lower pages might actually just be normal SRAM? Just lots to still figure out.
 
-Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
-Page $12 is used as extra RAM during the loader.
+- Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
+- Page $12 is used as extra RAM during the loader.
 
-`$11:$A000` is `$AA` if there is SRAM data to be backed up. Rest of workings not yet known.
-`$11:$A201` is written to `$88` to indicate cart initialization, if this isn't read back on boot of the loader it reports "Battery dry"
+- `$11:$A000` is `$AA` if there is SRAM data to be backed up. Rest of workings not yet known.
+- `$11:$A201` is written to `$88` to indicate cart initialization, if this isn't read back on boot of the loader it reports "Battery dry"
 
 # RTC
 
@@ -142,13 +142,13 @@ The RTC maps a full date/time into SRAM. Unlike the MBC3 RTC it contains full da
 
 Known mapped data is:
 
-`$A008`: BCD encoded seconds
-`$A009`: BCD encoded minutes
-`$A00A`: BCD encoded hours (24H format)
-`$A00B`: BCD encoded day of the month
-`$A00C`: ??
-`$A00D`: BCD encoded month number
-`$A00E`: BCD encoded last 2 digits of the year
+- `$A008`: BCD encoded seconds
+- `$A009`: BCD encoded minutes
+- `$A00A`: BCD encoded hours (24H format)
+- `$A00B`: BCD encoded day of the month
+- `$A00C`: ??
+- `$A00D`: BCD encoded month number
+- `$A00E`: BCD encoded last 2 digits of the year
 
 # ROM Load Data
 
@@ -159,9 +159,9 @@ This data is used to load the ROM from the SD card. It contains a list of SD car
 
 General structure is:
 
-`INT32[0]`: Value 0, reason unknown.
-`INT32[1..X]`: Pairs of 2 integers. First the start sector to start reading from, and next the amount of sectors to read. When there is no more fragmentation the last size is $FFFFFFFF
-`INT32[$7C]: Size of the to be loaded ROM in bytes.
-`INT32[$7D]: Value 1, reason unknown.
-`INT32[$7E]: Value 4, reason unknown.
-`INT32[$7F]: Value 0, reason unknown.
+- `INT32[0]`: Value 0, reason unknown.
+- `INT32[1..X]`: Pairs of 2 integers. First the start sector to start reading from, and next the amount of sectors to read. When there is no more fragmentation the last size is $FFFFFFFF
+- `INT32[$7C]: Size of the to be loaded ROM in bytes.
+- `INT32[$7D]: Value 1, reason unknown.
+- `INT32[$7E]: Value 4, reason unknown.
+- `INT32[$7F]: Value 0, reason unknown.
