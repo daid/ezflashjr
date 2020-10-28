@@ -90,7 +90,16 @@ Observed values:
 
 This register configures the MBC to be used by the cart. Currently assume this is only prepared, and not applied, as the loader ROM is still running from ROM when this is written.
 
-TODO: Note which values are which MBC.
+Known values:
+
+- `$00` No MBC
+- `$01` MBC1
+- `$02` MBC2
+- `$03` MBC3 (and gameboy camera)
+- `$83` MBC3+TIMER
+- `$04` MBC5
+- `$06` Fallback MBC, used for all others. (Not known how this acts)
+
 
 ### $7FC1, $7FC2: Configure ROM size/mask
 
