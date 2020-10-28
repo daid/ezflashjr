@@ -3,5 +3,4 @@ The first stage loads the 2nd stage loader (which provides file selection) from 
 
 These ROMs are somehow updated by the firmware updater, exact mechanism is currently unknown.
 
-Only the first 32KB is dumped. It is currently unknown of the first stage boot rom uses an MBC.
-
+These ROMs are 32KB, build with SDCC (which is obvious if you disassemble them)
