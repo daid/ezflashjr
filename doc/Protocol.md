@@ -66,6 +66,8 @@ $7FB0 is the LSB and $7FB3 is the MSB.
 
 This seems to be written to $01 after a sector number is loaded. This could be a trigger to start, or an amount of sectors to load. Testing is required to be sure.
 
+This is written to $81 to write a sector to the SD card. Data is stored in the SD Cart sector data mapping before this is initiated.
+
 
 ## SRAM/RTC related
 
