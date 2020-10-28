@@ -53,7 +53,7 @@ Use the $7FBx registers to configure which SD Sector to read.
 
 Observed possible values:
 
-- `$00` Unmap the SD Card from SRAM
+- `$00` Unmap the SD Card from SRAM area
 - `$01` Map SD Card sector data to SRAM, data will be available at $A000-$A200 (unknown if this wraps)
 - `$03` Map SD Card read status to SRAM, status is available at $A000, $01 indicates read is done. (usage seems to be to wait till reading is done)
 
@@ -79,7 +79,7 @@ Observed values:
 
 - `$00` Unmap SRAM area
 - `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
-- `$03` Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
+- `$03` Maps SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
 - `$04` Maps the FW Version to SRAM area. `$A000` contains version
 - `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
@@ -132,6 +132,8 @@ These are written to $00 and $80 by the `stage1` after the `loader` is loader. R
 # SRAM
 
 TODO... this is most likely loader specific, not Cart specific. And just SRAM for "general usage". Lower pages might actually just be normal SRAM? Just lots to still figure out.
+
+First pages seem to be normal cart SRAM, and mapped to the SRAM area during normal cartidge, as well as backed up to save files.
 
 - Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
 - Page $12 is used as extra RAM during the loader.
