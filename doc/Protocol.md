@@ -78,6 +78,7 @@ Observed values:
 - `$00` Unmap SRAM area
 - `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
 - `$03` Maps some kind of SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
+- `$04` Maps the FW Version to SRAM area. `$A000` contains version
 - `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
 ## ROM loading related
