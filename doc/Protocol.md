@@ -81,6 +81,7 @@ Observed values:
 - `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
 - `$03` Maps SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
 - `$04` Maps the FW Version to SRAM area. `$A000` contains version
+- `$05` Related to the firmware update. Firmware update data is stored in SD to RAM area, exact process unknown.
 - `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
 ## ROM loading related
@@ -119,6 +120,10 @@ Observed values:
 - `$01` Map `ROM Load command` data into SRAM area. See [ROM Load data](#rom-load-data)
 - `$03` Map ROM Load status into SRAM area. $A000 reads as $02 when rom loading is done.
 
+### $7FD2: Unknown
+
+This is written to $00 and $01 during firmware update. $A000 is read after $01 is written. Potentially write status info on firmware update?
+
 ### $7FD4: Unknown
 
 This is written to $00 during preperation to load a rom. Reason unknown.
@@ -128,6 +133,8 @@ This is written to $00 during preperation to load a rom. Reason unknown.
 These are written to $00 after a rom is loaded before a reset to this new rom. Reason unknown.
 
 These are written to $00 and $80 by the `stage1` after the `loader` is loader. Reason unknown.
+
+These are written to $00 and $80 by the firmware update. Reason unknown.
 
 # SRAM
 
