@@ -36,6 +36,7 @@ Note:
 
 Different things can be mapped to the SRAM area ($A000-$C000) including:
 
+- Nothing (default at cart start)
 - SRAM
 - SD card sector + status
 - RTC registers
@@ -57,19 +58,22 @@ Use the $7FBx registers to configure which SD Sector to read.
 Observed possible values:
 
 - `$00` Unmap the SD Card from SRAM area
-- `$01` Map SD Card sector data to SRAM, data will be available at $A000-$A200 (unknown if this wraps)
-- `$03` Map SD Card read status to SRAM, status is available at $A000, $01 indicates read is done. (usage seems to be to wait till reading is done)
+- `$01` Map SD Card sector data to SRAM, data will be available at $A000+, up to 4 sectors $800 bytes are available, and wraps after that.
+- `$03` Map SD Card read status to SRAM, status is available any SRAM area byte, $01 indicates read is done. (usage seems to be to wait till reading is done)
 
 ### $7FB0, $7FB1, $7FB2, $7FB3: SD Card Sector number
 
 These 4 registers combine to a 32bit sector number to read from the SD card. SD sectors are always read 512 bytes at a time.
 $7FB0 is the LSB and $7FB3 is the MSB.
 
-### $7FB4: SD Card trigger?
+### $7FB4: SD Card read/write count + trigger.
 
-This seems to be written to $01 after a sector number is loaded. This could be a trigger to start, or an amount of sectors to load. Testing is required to be sure.
+This triggers an amount of sectors to read/write. Setting the highest bit triggers a write, else it will read. A maximum of 4 sectors can be read a time. Writting multiple sectors has not been tested yet.
 
-This is written to $81 to write a sector to the SD card. Data is stored in the SD Cart sector data mapping before this is initiated.
+Example:
+- `$01` read 1 sector
+- `$02` read 2 sectors
+- `$81` write 1 sector
 
 
 ## SRAM/RTC related
@@ -83,7 +87,7 @@ Observed values:
 - `$00` Unmap SRAM area
 - `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
 - `$03` Maps SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
-- `$04` Maps the FW Version to SRAM area. `$A000` contains version
+- `$04` Maps the FW Version to SRAM area. Any byte in the SRAM area contains the version.
 - `$05` Related to the firmware update. Firmware update data is stored in SD to RAM area, exact process unknown. Could be the trigger that initiates a write.
 - `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
@@ -157,6 +161,7 @@ First pages seem to be normal cart SRAM, and mapped to the SRAM area during norm
 
 - Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
 - Page $12 is used as extra RAM during the loader.
+- There are a total of 64 pages of SRAM available.
 
 - `$11:$A000` is `$AA` if there is SRAM data to be backed up.
 - `$11:$A001` is size of the SRAM to bankup in number of SRAM banks.
@@ -167,17 +172,18 @@ First pages seem to be normal cart SRAM, and mapped to the SRAM area during norm
 
 # RTC
 
-The RTC maps a full date/time into SRAM. Unlike the MBC3 RTC it contains full date and is BCD encoded.
+The RTC maps a full date/time into SRAM. Unlike the MBC3 RTC it contains full date and is BCD encoded. Data is not latched, values keep updating.
 
-Known mapped data is:
+Known mapped data is: (x is any value, mapping repeats every `$0100` bytes)
 
-- `$A008`: BCD encoded seconds
-- `$A009`: BCD encoded minutes
-- `$A00A`: BCD encoded hours (24H format)
-- `$A00B`: BCD encoded day of the month
-- `$A00C`: Day of the week
-- `$A00D`: BCD encoded month number
-- `$A00E`: BCD encoded last 2 digits of the year
+- `$Ax08`: BCD encoded seconds
+- `$Ax09`: BCD encoded minutes
+- `$Ax0A`: BCD encoded hours (24H format)
+- `$Ax0B`: BCD encoded day of the month
+- `$Ax0C`: Day of the week
+- `$Ax0D`: BCD encoded month number
+- `$Ax0E`: BCD encoded last 2 digits of the year
+- All other addresses are zero (or open bus?)
 
 # ROM Load Data
 
