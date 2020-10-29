@@ -155,13 +155,13 @@ These are written to $00 and $80 by the firmware update. Reason unknown.
 
 # SRAM
 
-TODO... this is most likely loader specific, not Cart specific. And just SRAM for "general usage". Lower pages might actually just be normal SRAM? Just lots to still figure out.
+There are 64 banks of SRAM available. The first 16 are the normal cart SRAM that you can access during a normal rom. Rest of the SRAM is mostly unused except for a few bits the ezgb.dat loader puts in there.
+Unused SRAM contains random garbage, but can be used normally otherwise.
 
 First pages seem to be normal cart SRAM, and mapped to the SRAM area during normal cartidge, as well as backed up to save files.
 
 - Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
 - Page $12 is used as extra RAM during the loader.
-- There are a total of 64 pages of SRAM available.
 
 - `$11:$A000` is `$AA` if there is SRAM data to be backed up.
 - `$11:$A001` is size of the SRAM to bankup in number of SRAM banks.
@@ -196,7 +196,7 @@ General structure is:
 
 - `INT32[0]`: Value 0, reason unknown.
 - `INT32[1..X]`: Pairs of 2 integers. First the start sector to start reading from, and next the amount of sectors to read. When there is no more fragmentation the last size is $FFFFFFFF
-- `INT32[$7C]: Size of the to be loaded ROM in bytes.
-- `INT32[$7D]: Value 1, reason unknown.
-- `INT32[$7E]: Value 4, reason unknown.
-- `INT32[$7F]: Value 0, reason unknown.
+- `INT32[$7C]`: Size of the to be loaded ROM in bytes.
+- `INT32[$7D]`: Value 1, reason unknown.
+- `INT32[$7E]`: Value 4, reason unknown.
+- `INT32[$7F]`: Value 0, reason unknown.
