@@ -91,6 +91,10 @@ Observed values:
 - `$05` Related to the firmware update. Firmware update data is stored in SD to ROM area, exact process unknown. Could be the trigger that initiates a write.
 - `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
+### $7FD0: RTC Update trigger
+
+While having $7FC0 mapped to $06 (RTC) write new RTC values to the SRAM area, and write $01 to $7FD0 to update the RTC date/time.
+
 ## ROM loading related
 
 ### $7F37: Configure MBC
