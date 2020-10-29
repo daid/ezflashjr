@@ -98,6 +98,7 @@ Known values:
 - `$03` MBC3 (and gameboy camera)
 - `$83` MBC3+TIMER
 - `$04` MBC5
+- `$05` MBC1m
 - `$06` Fallback MBC, used for all others. (Not known how this acts)
 
 
