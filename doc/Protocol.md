@@ -17,7 +17,7 @@ General communication with the flash cart is done in 2 ways:
 
 The registers are all mapped in the $7Fxx memory area. And usage need to unlocked with an unlock sequence.
 
-Current stage1&loader always unlock and lock after each usage, if this is required is unknown, and it might just be possible to unlock once and keep it unlocked. But could also be that locking also triggers some execution.
+Current stage1&loader always unlock and lock after each usage, if this is required is unknown, and it might just be possible to unlock once and keep it unlocked.
 
 Unlock sequence is:
 
@@ -28,6 +28,9 @@ Unlock sequence is:
 Lock sequence is:
 
 1. write $E4 to $7FF0
+
+Note:
+- Writting anything in the $7F00-$7F2F range while the registers are unlocked will cause the registers to be locked. (This also causes the registers to be locked if the unlock sequence is done while the registers are unlocked)
 
 ## SRAM area
 
@@ -172,7 +175,7 @@ Known mapped data is:
 - `$A009`: BCD encoded minutes
 - `$A00A`: BCD encoded hours (24H format)
 - `$A00B`: BCD encoded day of the month
-- `$A00C`: ??
+- `$A00C`: Day of the week
 - `$A00D`: BCD encoded month number
 - `$A00E`: BCD encoded last 2 digits of the year
 
