@@ -88,7 +88,7 @@ Observed values:
 - `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
 - `$03` Maps SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
 - `$04` Maps the FW Version to SRAM area. Any byte in the SRAM area contains the version.
-- `$05` Related to the firmware update. Firmware update data is stored in SD to RAM area, exact process unknown. Could be the trigger that initiates a write.
+- `$05` Related to the firmware update. Firmware update data is stored in SD to ROM area, exact process unknown. Could be the trigger that initiates a write.
 - `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
 
 ## ROM loading related
