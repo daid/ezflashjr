@@ -171,6 +171,7 @@ First pages seem to be normal cart SRAM, and mapped to the SRAM area during norm
 - `$11:$A001` is size of the SRAM to bankup in number of SRAM banks.
 - `$11:$A00F` length of the SRAM save file filename
 - `$11:$A010+` contains sram save file if save needs to be backed up (in wchar_t)
+- `$11:$A200` auto save flag. $00 = no auto save, $01 = auto save
 - `$11:$A201` is written to `$88` to indicate cart initialization, if this isn't read back on boot of the loader it reports "Battery dry"
 - `$11:$A300+` contains the last loaded rom filename (in wchar_t)
 
