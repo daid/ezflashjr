@@ -19,12 +19,15 @@ Work in progress.
 
 ## Voltage regulators
 
+### Part description
+
 V1 and V2 are switching voltage regulators in a SOT23-5 package producing 3.3 V for the FPGA IO voltage and all other 3.3 V parts, and 1.2 V for the FPGA core voltage. They are connected according to the following pinout:
 
                __
     Vin/EN 1 -|  |- 5 FB
     Gnd    2 -|  |
-    LX     3 -|__|- 4 Vin/EN
+    LX     3 -|  |- 4 Vin/EN
+               ‾‾
 
 Vin and Enable are shorted together on the EZFJr so in practice their function could be swapped.
 
@@ -32,9 +35,10 @@ I have not yet found a perfect match for the marking on the part, however the co
 
 V1 and V2 are using the same device, and set the voltage using external feedback resistors. 
 
+### Analysis of V1
+
 The feedback network for V1 (R7, R8) looks like this:
 
-    V1:
            ______     ______
     Vout -| 453k |-o-| 100k |- Gnd
            ‾‾‾‾‾‾  |  ‾‾‾‾‾‾
@@ -43,9 +47,11 @@ The feedback network for V1 (R7, R8) looks like this:
 This gives a feedback ratio of 100k/(100k+453k)=0.1808
 Solving for Vref=Vout\*ratio with Vref=0.6 V gives Vout=3.3 V.
 
+### Analysis of V2
+
 The feedback network for V2 (R9, R10) looks like this:
 
-    V1:
+
            ______     ______
     Vout -| 100k |-o-| 100k |- Gnd
            ‾‾‾‾‾‾  |  ‾‾‾‾‾‾
