@@ -127,7 +127,7 @@ For some magical reason the checksum of the target ROM header is written here. R
 
 $7FC4 follows the pattern of $7FC1/$7FC2, but configures the mask for SRAM access. $00 is written if there is no SRAM available, else it sets up the amount of SRAM banks.
 
-### $7FE0: Reset to loader ROM
+### $7FE0: Reset to loaded ROM
 
 This is written to $80 to reset the cart and load the new rom. This is done from WRAM by the `loader`.
 
