@@ -35,8 +35,8 @@ Information about lock/unlock is left out. Generally each register write is prec
 - Read the SD card, same way as the `stage1` process, except that some data is store to SRAM for caching reasons.
 - User selects a file in the menu.
 - `$xx` -> `$7f37`: to select the right MBC for the selected rom
-- `$00` -> `$7fd4`: Reason unknown
-- `$xx` -> `$7fc4`: Set SROM bank mask
+- `$00` -> `$7fd4`: Reason unknown (as of kernel version 1.05)
+- `$xx` -> `$7fc4`: Set SRAM bank mask (as of kernel version 1.01)
 - `$xx` -> `$7fc1`: Set ROM bank mask low byte
 - `$xx` -> `$7fc2`: Set ROM bank mask high byte
 - `$xx` -> `$7fc3`: Write the header checksum for some reason...
