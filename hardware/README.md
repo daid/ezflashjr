@@ -3,17 +3,56 @@
 
 Work in progress.
 
-| Part designator | Part marking              | Part type    | Package type | Description |
-| --------------- | ------------------------- | ------------ | -------------| ----------- |
-| V1              | LDBQJ?                    | ???          | SOT23-5      | Probably a voltage regulator? |
-| V2              | LDBQJ?                    | ???          | SOT23-5      | Probably a voltage regulator? |
-| U1              | XC3S200A<br>VQG100AGQ1137 | XC3S200A     | VQFP100      | FPGA Spartan-3A, 4032 cells |
-| U2              | FT25H16S                  | FT25H16      | SOIC8        | SPI Flash 16 Mb (2 MB) 2.7-3.6 V |
-| U3              | 8563S<br>1935<br>TMS      | PCF8563      | TSSOP8       | Real-time clock with I2C interface |
-| U4              | 71GL064A08BFW0B           | S71GL064A08  | 56-FBGA      | Parallel flash 64 Mb (8 MB) with pSRAM 8 Mb (1 MB) 2.7-3.3 V |
-| U5              | 74HC595D                  | 74HC595      | SOIC16       | 8 bit serial in/parallel out shift register with latched tristate outputs |
-| U6, U7          | 74LVT162245B              | 74LVT162245B | TSSOP48      | 16 bit tristate level shifter |
-| U9              | 3350LLZDQD (?)            | ???          | ??-BGA       | SRAM (Unknown) |
+| Part designator | Part marking              | Part type     | Package type | Description |
+| --------------- | ------------------------- | ------------- | -------------| ----------- |
+| V1              | LDBQJ?                    | ???           | SOT23-5      | Switching voltage regulator with 0.6 V internal reference voltage. Produces 3.3 V in this design. |
+| V2              | LDBQJ?                    | ???           | SOT23-5      | Switching voltage regulator with 0.6 V internal reference voltage. Produces 1.2 V in this design. |
+| U1              | XC3S200A<br>VQG100AGQ1137 | XC3S200A      | VQFP100      | FPGA Spartan-3A, 4032 cells |
+| U2              | FT25H16S                  | FT25H16       | SOIC8        | SPI Flash 16 Mb (2 MB) 2.7-3.6 V |
+| U3              | 8563S<br>1935<br>TMS      | PCF8563       | TSSOP8       | Real-time clock with I2C interface |
+| U4              | 71GL064A08BFW0B           | S71GL064A08   | 56-FBGA      | Parallel flash 64 Mb (8 MB) with pSRAM 8 Mb (1 MB) 2.7-3.3 V |
+| U5              | 74HC595D                  | 74HC595       | SOIC16       | 8 bit serial in/parallel out shift register with latched tristate outputs |
+| U6, U7          | 74LVT162245B              | 74LVT162245B  | TSSOP48      | 16 bit tristate level shifter |
+| U9              | 3350LLZDQD (?)            | ???           | ??-BGA       | SRAM (Unknown) |
+| R7              | 64D                       | 453k resistor | 0603         | Feedback resistor for the voltage regulator. Note, EIA-96 SMD resistor marking! |
+| R8, R9, R10     | 104                       | 100k resistor | 0603         | Feedback resistors for the voltage regulator. |
 
+## Voltage regulators
 
+V1 and V2 are switching voltage regulators in a SOT23-5 package producing 3.3 V for the FPGA IO voltage and all other 3.3 V parts, and 1.2 V for the FPGA core voltage. They are connected according to the following pinout:
+
+               __
+    Vin/EN 1 -|  |- 5 FB
+    Gnd    2 -|  |
+    LX     3 -|__|- 4 Vin/EN
+
+Vin and Enable are shorted together on the EZFJr so in practice their function could be swapped.
+
+I have not yet found a perfect match for the marking on the part, however the connected parts match a regulator with an 0.6 V internal reference voltage and the pinout above, such as AP3429. 
+
+V1 and V2 are using the same device, and set the voltage using external feedback resistors. 
+
+The feedback network for V1 (R7, R8) looks like this:
+
+    V1:
+           ______     ______
+    Vout -| 453k |-o-| 100k |- Gnd
+           ‾‾‾‾‾‾  |  ‾‾‾‾‾‾
+                   o-- FB
+
+This gives a feedback ratio of 100k/(100k+453k)=0.1808
+Solving for Vref=Vout\*ratio with Vref=0.6 V gives Vout=3.3 V.
+
+The feedback network for V2 (R9, R10) looks like this:
+
+    V1:
+           ______     ______
+    Vout -| 100k |-o-| 100k |- Gnd
+           ‾‾‾‾‾‾  |  ‾‾‾‾‾‾
+                   o-- FB
+
+This gives a feedback ratio of 100k/(100k+100k)=0.5
+Solving for Vref=Vout\*ratio with Vref=0.6 V gives Vout=1.2 V.
+
+V2 is powered by V1's output.
 
