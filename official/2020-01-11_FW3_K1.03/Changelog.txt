@@ -1,0 +1,21 @@
+Changelog
+
+FW3 K1.03
+Improved game compatibility
+Added the support of MBC1M Multicart
+
+K1.02
+Fixed some logical error in last played game.
+
+FW2 K1.01
+Fixed some game compatibility
+Optimize the limited number of files and directories
+Fixed some file display issues
+Added a Reading interface
+Added a Loading interface
+Added the support of MBC30 64KB SAVE
+Added AUTO SAVE in SET tab
+Checked = Backup the save to SD every time automatically when kernel booting up 
+Unchecked = Kernel will ask every time when kernel booting up, cancel backup may cause you to lose the last play record
+
+Added last played game Press START in file browser to activate, Press A to launch, B to cancel.
