@@ -14,7 +14,7 @@ Guess is that the payload is an FPGA bitstream, but this has not been confirmed.
 What has been confirmed is that this update changes the `stage1` boot.
 
 
-== Official changelog
+## Official changelog
 
 ### FW5 K1.05RC
 
