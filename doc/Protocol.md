@@ -4,7 +4,7 @@ This document documents the protocol/registers used by the EZFlashJr cart.
 
 There is a good chance this document will contain mistakes, and a lot will need extra verfication/tests to understand the exact workings.
 
-It is unknown if/which of these functions are available during a normal ROM run. Effort has focused on the `loader` so far.
+It is unknown if/which of these functions are available during a normal ROM run. Effort has focused on the `kernel` so far.
 
 # General
 
@@ -17,7 +17,7 @@ General communication with the flash cart is done in 2 ways:
 
 The registers are all mapped in the $7Fxx memory area. And usage need to unlocked with an unlock sequence.
 
-Current stage1&loader always unlock and lock after each usage, if this is required is unknown, and it might just be possible to unlock once and keep it unlocked.
+Current stage1&kernel always unlock and lock after each usage, if this is required is unknown, and it might just be possible to unlock once and keep it unlocked.
 
 Unlock sequence is:
 
@@ -99,7 +99,7 @@ While having $7FC0 mapped to $06 (RTC) write new RTC values to the SRAM area, an
 
 ### $7F37: Configure MBC
 
-This register configures the MBC to be used by the cart. Currently assume this is only prepared, and not applied, as the loader ROM is still running from ROM when this is written.
+This register configures the MBC to be used by the cart. Currently assume this is only prepared, and not applied, as the kernel ROM is still running from ROM when this is written.
 
 Known values:
 
@@ -129,7 +129,7 @@ $7FC4 follows the pattern of $7FC1/$7FC2, but configures the mask for SRAM acces
 
 ### $7FE0: Reset to loaded ROM
 
-This is written to $80 to reset the cart and load the new rom. This is done from WRAM by the `loader`.
+This is written to $80 to reset the cart and load the new rom. This is done from WRAM by the `kernel`.
 
 ### $7F36: ROM Loading commands
 
@@ -153,26 +153,26 @@ This is written to $00 during preperation to load a rom. Reason unknown.
 
 These are written to $00 after a rom is loaded before a reset to this new rom. Reason unknown.
 
-These are written to $00 and $80 by the `stage1` after the `loader` is loader. Reason unknown.
+These are written to $00 and $80 by the `stage1` after the `kernel` is loaded. Reason unknown.
 
 These are written to $00 and $80 by the firmware update. Reason unknown.
 
 # SRAM
 
-There are 64 banks of SRAM available. The first 16 are the normal cart SRAM that you can access during a normal rom. Rest of the SRAM is mostly unused except for a few bits the ezgb.dat loader puts in there.
+There are 64 banks of SRAM available. The first 16 are the normal cart SRAM that you can access during a normal rom. Rest of the SRAM is mostly unused except for a few bits the ezgb.dat kernel puts in there.
 Unused SRAM contains random garbage, but can be used normally otherwise.
 
 First pages seem to be normal cart SRAM, and mapped to the SRAM area during normal cartidge, as well as backed up to save files.
 
 - Page $11 seems to contain flash cart status (previously loaded rom for SRAM backup?)
-- Page $12 is used as extra RAM during the loader.
+- Page $12 and beyond is used as extra RAM during the kernel, mostly to cache the file list.
 
 - `$11:$A000` is `$AA` if there is SRAM data to be backed up.
 - `$11:$A001` is size of the SRAM to bankup in number of SRAM banks.
 - `$11:$A00F` length of the SRAM save file filename
 - `$11:$A010+` contains sram save file if save needs to be backed up (in wchar_t)
 - `$11:$A200` auto save flag. $00 = no auto save, $01 = auto save
-- `$11:$A201` is written to `$88` to indicate cart initialization, if this isn't read back on boot of the loader it reports "Battery dry"
+- `$11:$A201` is written to `$88` to indicate cart initialization, if this isn't read back on boot of the kernel it reports "Battery dry"
 - `$11:$A300+` contains the last loaded rom filename (in wchar_t)
 
 # RTC
@@ -195,7 +195,7 @@ Known mapped data is: (x is any value, mapping repeats every `$0100` bytes)
 To load a rom 512 bytes of data is loaded into the `ROM Load command` data. These are 128 32bit integers.
 This data is used to load the ROM from the SD card. It contains a list of SD card sectors to read into the ROM. It is a list of start sector with amount of sectors to read. Depending on the fragmentation on the SD card it will only need one or a few entries.
 
-(Note, when observing this in the `loader`, the used buffer isn't cleared and unwritten data still contain the first 512 bytes of the loaded ROM)
+(Note, when observing this in the `kernel`, the used buffer isn't cleared and unwritten data still contain the first 512 bytes of the loaded ROM)
 
 General structure is:
 
