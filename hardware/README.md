@@ -78,16 +78,16 @@ This is the Gameboy cartridge header. Not many surprises here. Some minor notes:
 
 There's a JTAG header for the FPGA at the back of the board. Counting from the edge of the cartridge, the JTAG pins are organized as follows:
 
-| Pad number | Function                   | FPGA pin           |
-| ---------- | -------------------------- | ------------------ |
-| 1          | Gnd                        | Gnd                |
-| 2          | V<sub>CC</sub>sub> (3.3 V) | V<sub>CC</sub>sub> |
-| 3          | V<sub>CC</sub>sub> (3.3 V) | V<sub>CC</sub>sub> |
-| 4          | Gnd                        | Gnd                |
-| 5          | TDI                        | 2                  |
-| 6          | TMS                        | 1                  |
-| 7          | TCK                        | 76                 |
-| 8          | TDO                        | 75                 |
+| Pad number | Function               | FPGA pin       |
+| ---------- | ---------------------- | -------------- |
+| 1          | Gnd                    | Gnd            |
+| 2          | V<sub>CC</sub> (3.3 V) | V<sub>CC</sub> |
+| 3          | V<sub>CC</sub> (3.3 V) | V<sub>CC</sub> |
+| 4          | Gnd                    | Gnd            |
+| 5          | TDI                    | 2              |
+| 6          | TMS                    | 1              |
+| 7          | TCK                    | 76             |
+| 8          | TDO                    | 75             |
 
 ### Mysterious 3 pad header
 
