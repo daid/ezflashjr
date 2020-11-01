@@ -59,7 +59,7 @@ Observed possible values:
 
 - `$00` Unmap the SD Card from SRAM area
 - `$01` Map SD Card sector data to SRAM, data will be available at $A000+, up to 4 sectors $800 bytes are available, and wraps after that.
-- `$03` Map SD Card read status to SRAM, status is available any SRAM area byte, $01 indicates read is done. (usage seems to be to wait till reading is done)
+- `$03` Map SD Card read status to SRAM, status is available any SRAM area byte, $01 indicates read is done, $E1 indicates busy. (usage seems to be to wait till reading is done)
 
 ### $7FB0, $7FB1, $7FB2, $7FB3: SD Card Sector number
 
