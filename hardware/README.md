@@ -47,7 +47,7 @@ The feedback network for V1 (R7, R8) looks like this:
                    o-- FB
 
 This gives a feedback ratio of 100kΩ/(100kΩ+453kΩ)=0.1808
-Solving for Vref=Vout\*ratio with Vref=0.6 V gives Vout=3.3 V.
+Solving for V<sub>ref</sub>=V<sub>out</sub>\*ratio with V<sub>ref</sub>=0.6 V gives V<sub>out</sub>=3.3 V.
 
 ### Analysis of V2
 
@@ -60,7 +60,7 @@ The feedback network for V2 (R9, R10) looks like this:
                    o-- FB
 
 This gives a feedback ratio of 100kΩ/(100kΩ+100kΩ)=0.5
-Solving for Vref=Vout\*ratio with Vref=0.6 V gives Vout=1.2 V.
+Solving for V<sub>ref</sub>=V<sub>out</sub>\*ratio with V<sub>ref</sub>=0.6 V gives V<sub>out</sub>=1.2 V.
 
 V2 is powered by V1's output.
 
