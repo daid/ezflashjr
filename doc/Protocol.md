@@ -141,9 +141,10 @@ Observed values:
 - `$01` Map `ROM Load command` data into SRAM area. See [ROM Load data](#rom-load-data)
 - `$03` Map ROM Load status into SRAM area. $A000 reads as $02 when rom loading is done.
 
-### $7FD2: Unknown
+### $7FD2: Map firmware update status
 
-This is written to $00 and $01 during firmware update. $A000 is read after $01 is written. Potentially write status info on firmware update?
+This is written to $01 to map firmware update status to SRAM area, the current firmware update command is still busy when address $A000 reads any non zero value.
+This is written to $00 to unmap firmware update status.
 
 ### $7FD4: Unknown
 
