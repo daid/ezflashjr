@@ -138,7 +138,7 @@ This maps ROM loading information to the SRAM area. This is used from WRAM as RO
 Observed values:
 
 - `$00` Unmap SRAM area
-- `$01` Map `ROM Load command` data into SRAM area. See [ROM Load data](#rom-load-data)
+- `$01` Map `ROM Load command` data into SRAM area. This area is write only. See [ROM Load data](#rom-load-data)
 - `$03` Map ROM Load status into SRAM area. $A000 reads as $02 when rom loading is done.
 
 ### $7FD2: Map firmware update status
