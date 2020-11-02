@@ -110,7 +110,7 @@ Known values:
 - `$83` MBC3+TIMER
 - `$04` MBC5
 - `$05` MBC1m
-- `$06` Fallback MBC, used for all others. (Not known how this acts)
+- `$06` Fallback MBC, used for all others. (Seems to act like no MBC)
 
 
 ### $7FC1, $7FC2: Configure ROM size/mask
