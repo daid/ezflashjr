@@ -13,7 +13,7 @@ Information about lock/unlock is left out. Generally each register write is prec
 - Following is repeated multiple times to read the partition information, and FAT tables to find ezgb.dat and which sectors it is stored in. Note that the same sector is repeatedly read multiple times for some reason.
   - `$01` -> `$7f30`: Map SD data (reason unknown, might be required before initiating data read?)
   - Sector number -> `$7fb0` `$7fb1` `$7fb2` `$7fb3`: Prepare to load sector
-  - `$01` -> `$7fd4`: Read SD sector from SD card
+  - `$01` -> `$7fb4`: Read SD sector from SD card
   - `$03` -> `$7f30`: Map SD read status
   - `$A000` is checked to see if SD data is ready
   - `$01` -> `$7f30`: Map SD sector data, reason unknown, as status is not read...
