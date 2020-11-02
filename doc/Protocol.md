@@ -204,5 +204,5 @@ General structure is:
 - `INT32[1..X]`: Pairs of 2 integers. First the start sector to start reading from, and next the amount of sectors to read. When there is no more fragmentation the last size is $FFFFFFFF
 - `INT32[$7C]`: Size of the to be loaded ROM in bytes.
 - `INT32[$7D]`: Value 1, reason unknown.
-- `INT32[$7E]`: Value 4, reason unknown (maybe amount of sectors in a FAT cluster?)
+- `INT32[$7E]`: Value 1,4,8,16, reason unknown (maybe amount of sectors in a FAT cluster?)
 - `INT32[$7F]`: Value 0, reason unknown.
