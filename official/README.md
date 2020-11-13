@@ -5,6 +5,7 @@ These contain the files included in the original zip file:
 - Update_*.gb: Update rom which updates the FPGA/Boot rom.
 - ezgb.dat: The "kernel" ROM which contains the file selection menu etc...
 - Some versions contain readme and changelog files in English and/or Chinese.
+- bitstream-dump.bin: The original release (2019-12-25_K1.00) did not come with a update ROM containing the FPGA bitstream. This file is instead a dump of the flash chip from a cartridge known to contain firmware version 1 so the bitstream can be preserved.
 
 Both the updater and kernel are GB ROMs. Both are built with sdcc and gbdk. Used versions are unknown.
 
