@@ -110,7 +110,7 @@ Known values:
 - `$83` MBC3+TIMER
 - `$04` MBC5
 - `$05` MBC1m
-- `$06` Fallback MBC, used for all others. (Not known how this acts)
+- `$06` Fallback MBC, used for all others. (Seems to act like no MBC)
 
 
 ### $7FC1, $7FC2: Configure ROM size/mask
@@ -138,16 +138,21 @@ This maps ROM loading information to the SRAM area. This is used from WRAM as RO
 Observed values:
 
 - `$00` Unmap SRAM area
-- `$01` Map `ROM Load command` data into SRAM area. See [ROM Load data](#rom-load-data)
+- `$01` Map `ROM Load command` data into SRAM area. This area is write only. See [ROM Load data](#rom-load-data)
 - `$03` Map ROM Load status into SRAM area. $A000 reads as $02 when rom loading is done.
 
-### $7FD2: Unknown
+### $7FD2: Map firmware update status
 
-This is written to $00 and $01 during firmware update. $A000 is read after $01 is written. Potentially write status info on firmware update?
+This is written to $01 to map firmware update status to SRAM area, the current firmware update command is still busy when address $A000 reads any non zero value.
+This is written to $00 to unmap firmware update status.
+
+### $7FD3: Unknown
+
+This is written to $01 during `stage1`, reason unknown. (As of FW5)
 
 ### $7FD4: Unknown
 
-This is written to $00 during preperation to load a rom. Reason unknown.
+This is written to $00 during preperation to load a rom. Reason unknown. (As of FW5)
 
 ### $7F31, $7F32: Unknown
 
@@ -203,5 +208,4 @@ General structure is:
 - `INT32[1..X]`: Pairs of 2 integers. First the start sector to start reading from, and next the amount of sectors to read. When there is no more fragmentation the last size is $FFFFFFFF
 - `INT32[$7C]`: Size of the to be loaded ROM in bytes.
 - `INT32[$7D]`: Value 1, reason unknown.
-- `INT32[$7E]`: Value 4, reason unknown (maybe amount of sectors in a FAT cluster?)
-- `INT32[$7F]`: Value 0, reason unknown.
+- `INT32[$7E]`: Value 1,4,8,16, reason unknown (maybe amount of sectors in a FAT cluster?)
