@@ -19,6 +19,50 @@ Work in progress.
 | R7              | 64D                       | 453 kΩ resistor | 0603         | Feedback resistor for the voltage regulator. Note, EIA-96 SMD resistor marking! |
 | R8, R9, R10     | 104                       | 100 kΩ resistor | 0603         | Feedback resistors for the voltage regulator. |
 
+## SPI flash
+
+### Part description
+
+The SPI flash is a 16 Mbit (2 MB) chip used to store the FPGA bitstream. Pinout below. `HOLD#` is permanently connected to V<sub>cc</sub> and `WP#` is permanently connected to V<sub>ss</sub> (Gnd) so in practice only 6 wires are needed for external programming.
+
+            ___
+    CS# 1 -|   |- 8 Vcc
+    SO  2 -|   |- 7 HOLD#
+    WP# 3 -|   |- 6 SCLK
+    Vss 4 -|   |- 5 SI
+            ‾‾‾
+
+The chip ID is: `0x0E4015`
+
+### Test setup
+
+![nitro2k01's test setup](images/nitro2k01-test-setup.jpg)
+
+This is my (nitro2k01's) test setup for experimenting with the FPGA configuration. It would probably be better to do this through JTAG, but I'm lazy, so I'm going with what I know already. The SPI flash chip is connected on a breakout board that allows an external programmer to be plugged in. The board also contains protection resistors between the SPI flash and the FPGA to allow the external programmer to override the FPGA, and a diode OR for power. I used 200 ohm resistors, which worked at first but apparently this was too low as it stopped working later. I'll have to try with higher value resistors and/or scoping the signals to see how they look.
+
+The chip can be programmed with a Minipro TL866CS using the `A25L016@SOP8` profile if you override the chip mismatch with the `-y` option. Example run using [David Griffith's minipro interface for Linux](https://gitlab.com/DavidGriffith/minipro/):
+
+    $ minipro -a 8 
+    Found TL866A 03.2.80 (0x250)
+    Warning: Firmware is out of date.
+      Expected  03.2.86 (0x256)
+      Found     03.2.80 (0x250)
+    Autodetecting device (ID:0xE4015)
+    0 device(s) found.
+    $ minipro -p A25L016@SOP8 -D
+    Found TL866A 03.2.80 (0x250)
+    Warning: Firmware is out of date.
+      Expected  03.2.86 (0x256)
+      Found     03.2.80 (0x250)
+    Chip ID mismatch: expected 0x373015, got 0xE4015 (unknown)
+    $ minipro -p A25L016@SOP8 -y -r readback.bin
+    Found TL866A 03.2.80 (0x250)
+    Warning: Firmware is out of date.
+      Expected  03.2.86 (0x256)
+      Found     03.2.80 (0x250)
+    WARNING: Chip ID mismatch: expected 0x373015, got 0xE4015 (unknown)
+    Reading Code...  21.78Sec  OK
+
 ## Voltage regulators
 
 ### Part description
