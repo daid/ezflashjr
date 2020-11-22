@@ -36,7 +36,7 @@ The chip ID is: `0x0E4015`
 
 ### Test setup
 
-![nitro2k01's test setup](images/nitro2k01-test-setup.jpg)
+![nitro2k01's test setup](photos/nitro2k01-test-setup.jpg)
 
 This is my (nitro2k01's) test setup for experimenting with the FPGA configuration. It would probably be better to do this through JTAG, but I'm lazy, so I'm going with what I know already. The SPI flash chip is connected on a breakout board that allows an external programmer to be plugged in. The board also contains protection resistors between the SPI flash and the FPGA to allow the external programmer to override the FPGA, and a diode OR for power. I used 200 ohm resistors, which worked at first but apparently this was too low as it stopped working later. I'll have to try with higher value resistors and/or scoping the signals to see how they look.
 
