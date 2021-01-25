@@ -146,13 +146,13 @@ Observed values:
 This is written to $01 to map firmware update status to SRAM area, the current firmware update command is still busy when address $A000 reads any non zero value.
 This is written to $00 to unmap firmware update status.
 
-### $7FD3: Unknown
+### $7FD3: Unknown (gameboy type?)
 
-This is written to $01 during `stage1`, reason unknown. (As of FW5)
+This is written to initial value of A register after boot rom is done during `stage1`. Which contains $01, $11 or $FF depending on the gameboy model (DMG, CGB, SGB2), reason unknown. (This is only done in FW5 or newer)
 
 ### $7FD4: Unknown
 
-This is written to $00 during preperation to load a rom. Reason unknown. (As of FW5)
+This is written to $00 during preperation to load a rom. Reason unknown. (This is only done in FW5 or newer)
 
 ### $7F31, $7F32: Unknown
 
