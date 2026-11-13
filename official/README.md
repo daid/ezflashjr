@@ -17,6 +17,17 @@ What has been confirmed is that this update changes the `stage1` boot.
 
 ## Official changelog
 
+### FW5 K1.05e
+
+Dated 2021-09-18. Not on EZ Flash's download page, and the package has no changelog. Compared with FW5 K1.05RC:
+
+* The kernel is the K1.05RC kernel plus an RTC test screen that nothing calls, and still shows K1.05e
+* The firmware is where the changes are: stage1 has a Super Game Boy header, and the MBC3 clock handling has fixes
+
+### FW5 forSGB BETA
+
+Dated 2020-09-29. A beta updater for Super Game Boy support, with no kernel.
+
 ### FW5 K1.05RC
 
 Released 2020-07-31.
