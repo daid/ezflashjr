@@ -27,3 +27,7 @@ First shipped with version K1.04e according to the official changelog. According
 
 First shipped with version K1.05RC according to the official changelog.
 
+
+### FW5 (2021-09-18)
+
+In `FW5-2021-09-18`. Shipped in the 2021-09-18 updater, and the same ROM is in the forSGB beta updater. It differs from the FW5 one above in three header bytes: the SGB flag, the old licensee code and the header checksum. Not dumped from a cartridge: taken from the block RAM contents of the FPGA bitstream inside the updater. The FW4 and FW5 ROMs above come out of their updaters the same way and match the dumps.
