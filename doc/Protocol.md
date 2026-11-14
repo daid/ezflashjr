@@ -185,15 +185,15 @@ The unlock sequence and the $7Fxx registers work in every mode. So a normal ROM 
 2. `$80` -> `$7F32`
 3. Lock.
 
-The ROM keeps running from the same `rom area` data, but the banking is now the kernel mode banking above. SD access, the RTC registers and all SRAM pages ($7FC0) then work as they do in the `kernel`. Switch back to game mode by writing `$00` to $7F32 the same way. Because the ROM bank register is shared between the two modes, write the game's ROM bank again after switching back. The MBC type, the masks and the SRAM enable are kept.
+The ROM keeps running from the same `rom area` data, but the banking is now the kernel mode banking above. SD access, the RTC registers and all SRAM pages ($7FC0) then work as they do in the `kernel`. Switch back to game mode by writing `$00` to $7F32. Because the ROM bank register is shared between the two modes, write the game's ROM bank again after switching back. The MBC type, the masks and the SRAM enable are kept.
 
 Notes:
 
 - Don't write `$88` to $7F32 unless you want `stage1` back in the ROM area.
-- The unlock and lock writes go to $7F00-$7FF0, which is also the $6000-$7FFF MBC register range in game mode. In an MBC1 game they change the banking mode bit, and it ends up 0 either way, so a game that uses mode 1 has to set it again.
+- The unlock and lock writes go to $7F00-$7FF0, which is also the $6000-$7FFF MBC register range in game mode. In an MBC1 game they change the banking mode bit and leave it at 0, so a game that uses mode 1 has to set it again.
 - This is the sequence [VGM_player](https://github.com/untoxa/VGM_player/) uses to read the SD card (see issue #7).
 
-Source: the FW4 and FW5 (2021-09-18) FPGA bitstreams, decoded into Verilog that was proven equivalent to them. See [gb_regs.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/gb_regs.v) and [unlock.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/unlock.v) in the ezgb repo, and [gb_regs.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw5-0918/gb_regs.v) for FW5. Switching back to game mode has not been tested on hardware.
+Source: the FW4 and FW5 (2021-09-18) FPGA bitstreams, decoded into Verilog and proved equivalent. See [gb_regs.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/gb_regs.v) and [unlock.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/unlock.v) in the ezgb repo, and [gb_regs.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw5-0918/gb_regs.v) for FW5. Switching back to game mode has not been tested on hardware.
 
 # SRAM
 
