@@ -4,7 +4,7 @@ This document documents the protocol/registers used by the EZFlashJr cart.
 
 There is a good chance this document will contain mistakes, and a lot will need extra verfication/tests to understand the exact workings.
 
-It is unknown if/which of these functions are available during a normal ROM run. Effort has focused on the `kernel` so far.
+Most of these functions only work in kernel mode, but a normal ROM can switch back to it. See [Access from a normal ROM](#access-from-a-normal-rom).
 
 # General
 
@@ -154,13 +154,46 @@ This is written to initial value of A register after boot rom is done during `st
 
 This is written to $00 during preperation to load a rom. Reason unknown. (This is only done in FW5 or newer)
 
-### $7F31, $7F32: Unknown
+### $7F32: Mode
 
-These are written to $00 after a rom is loaded before a reset to this new rom. Reason unknown.
+Bits 7 and 3 of this register switch the whole cart between three modes. Both bits are set at power-on.
 
-These are written to $00 and $80 by the `stage1` after the `kernel` is loaded. Reason unknown.
+| Bit 7 | Bit 3 | Mode | ROM area ($0000-$7FFF) reads | Set by |
+| ----- | ----- | ---- | ---------------------------- | ------ |
+| 1 | 1 | stage1 | `stage1`, from the FPGA block RAM | power-on |
+| 1 | 0 | kernel | the `rom area`, where the kernel was loaded | `stage1`, `$80` |
+| 0 | 0 | game | the `rom area`, through the MBC set in $7F37 | `kernel` launch, `$00` |
 
-These are written to $00 and $80 by the firmware update. Reason unknown.
+In kernel mode:
+
+- Writes to $2000-$2FFF set an 8 bit ROM bank and $3000-$3FFF its bit 8. There is no MBC behavior and the bank masks are not applied.
+- $4000-$5FFF sets the SRAM page used by `$7FC0 = $03`.
+- The SRAM area shows whatever $7FC0 selects.
+- The SD card and the PicoBlaze processor that drives it (and the RTC) are running.
+
+In game mode, writes to $0000-$7FFF go to the MBC set in $7F37 and the SRAM area is the normal cart SRAM. The SD card logic is stopped, and the PicoBlaze is stopped too unless $7F37 bit 7 (the RTC flag) is set. The SD sector buffer and status can't be seen in the SRAM area in this mode.
+
+### $7F31: Nothing
+
+There is no register at $7F31. A write to it keeps the registers unlocked but is stored nowhere. `stage1`, the `kernel` and the updater write `$00` to it next to every $7F32 write. Why is not known.
+
+# Access from a normal ROM
+
+The unlock sequence and the $7Fxx registers work in every mode. So a normal ROM can switch the cart back to kernel mode:
+
+1. Unlock.
+2. `$80` -> `$7F32`
+3. Lock.
+
+The ROM keeps running from the same `rom area` data, but the banking is now the kernel mode banking above. SD access, the RTC registers and all SRAM pages ($7FC0) then work as they do in the `kernel`. Switch back to game mode by writing `$00` to $7F32 the same way. Because the ROM bank register is shared between the two modes, write the game's ROM bank again after switching back. The MBC type, the masks and the SRAM enable are kept.
+
+Notes:
+
+- Don't write `$88` to $7F32 unless you want `stage1` back in the ROM area.
+- The unlock and lock writes go to $7F00-$7FF0, which is also the $6000-$7FFF MBC register range in game mode. In an MBC1 game they change the banking mode bit, and it ends up 0 either way, so a game that uses mode 1 has to set it again.
+- This is the sequence [VGM_player](https://github.com/untoxa/VGM_player/) uses to read the SD card (see issue #7).
+
+Source: the FW4 and FW5 (2021-09-18) FPGA bitstreams, decoded into Verilog that was proven equivalent to them. See [gb_regs.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/gb_regs.v) and [unlock.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/unlock.v) in the ezgb repo, and [gb_regs.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw5-0918/gb_regs.v) for FW5. Switching back to game mode has not been tested on hardware.
 
 # SRAM
 
