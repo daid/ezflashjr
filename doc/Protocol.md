@@ -13,7 +13,7 @@ General communication with the flash cart is done in 2 ways:
 - Register writes
 - Mapping to SRAM area
 
-## Writting to registers
+## Writing to registers
 
 The registers are all mapped in the $7Fxx memory area. And usage need to unlocked with an unlock sequence.
 
@@ -30,7 +30,7 @@ Lock sequence is:
 1. write $E4 to $7FF0
 
 Note:
-- Writting anything in the $7F00-$7F2F range while the registers are unlocked will cause the registers to be locked. (This also causes the registers to be locked if the unlock sequence is done while the registers are unlocked)
+- Writing anything in the $7F00-$7F2F range while the registers are unlocked will cause the registers to be locked. (This also causes the registers to be locked if the unlock sequence is done while the registers are unlocked)
 
 ## SRAM area
 
@@ -68,7 +68,7 @@ $7FB0 is the LSB and $7FB3 is the MSB.
 
 ### $7FB4: SD Card read/write count + trigger.
 
-This triggers an amount of sectors to read/write. Setting the highest bit triggers a write, else it will read. A maximum of 4 sectors can be read a time. Writting multiple sectors has not been tested yet.
+This triggers an amount of sectors to read/write. Setting the highest bit triggers a write, else it will read. A maximum of 4 sectors can be read a time. Writing multiple sectors has not been tested yet.
 
 Example:
 - `$01` read 1 sector
@@ -146,13 +146,15 @@ Observed values:
 This is written to $01 to map firmware update status to SRAM area, the current firmware update command is still busy when address $A000 reads any non zero value.
 This is written to $00 to unmap firmware update status.
 
-### $7FD3: Unknown (gameboy type?)
+### $7FD3, $7FD4: Fast load key (FW5 only)
 
-This is written to initial value of A register after boot rom is done during `stage1`. Which contains $01, $11 or $FF depending on the gameboy model (DMG, CGB, SGB2), reason unknown. (This is only done in FW5 or newer)
+A write to $7FD4 stores the sum of the byte written and the last byte written to $7FD3. When a ROM load starts, the FW5 loader reads that sum, and if it is `$11` it skips the long delay it normally waits after each SD read. Both start at 0. FW4 has neither register and always waits.
 
-### $7FD4: Unknown
+`stage1` writes the console's boot value of the A register to $7FD3: `$01` on a DMG or SGB, `$11` on a CGB or GBA, `$FF` on a GB Pocket or SGB2. The `kernel` (K1.05 and later) writes `$00` to $7FD4 before it loads a rom. So with the stock firmware only a CGB or GBA gets the fast load, which matches the K1.05RC changelog line "All device beyond CGB(included) have turbo loading speed". K1.04e never writes $7FD4, so it always gets the slow load, even on FW5. A kernel that writes `$00` to $7FD3 and then `$11` to $7FD4 gets the fast load on every console.
 
-This is written to $00 during preperation to load a rom. Reason unknown. (This is only done in FW5 or newer)
+Each skipped delay is about 20 ms, roughly 0.7 s per MB of ROM. This comes from simulation and has not been timed on hardware.
+
+Source: the FW5 (2021-09-18) FPGA bitstream, decoded into Verilog and proved equivalent. See [fw5_7fxx.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw5-0918/fw5_7fxx.v) in the ezgb repo, and the fast-load notes in [firmware-diff.md](https://github.com/lukesau/ezgb/blob/main/stage0/docs/firmware-diff.md#the-fast-load-key).
 
 ### $7F31, $7F32: Unknown
 
