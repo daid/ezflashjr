@@ -50,16 +50,18 @@ Registers are write only. Reading information back is always done in SRAM mappin
 
 ## SD Card related
 
-### $7F30: Switch SD Card SRAM
+### $7F30: SD Card window enables
 
-Writting to this register will configure the SRAM area as different things.
-Use the $7FBx registers to configure which SD Sector to read.
+Two bits that control what the SRAM area shows while $7FC0 is `$00`. Use the $7FBx registers to configure which SD Sector to read.
 
-Observed possible values:
+- Bit 0 makes the SD sector buffer readable at $A000+. Up to 4 sectors ($800 bytes) are available, and it wraps after that. This bit also has to be set for the "read done" flag to be set, which is why `stage1` and the `kernel` write `$01` here before starting a read.
+- Bit 1 makes the SRAM area read `$01` instead of the sector data once the read is done.
+
+So the observed values are:
 
 - `$00` Unmap the SD Card from SRAM area
-- `$01` Map SD Card sector data to SRAM, data will be available at $A000+, up to 4 sectors $800 bytes are available, and wraps after that.
-- `$03` Map SD Card read status to SRAM, status is available any SRAM area byte, $01 indicates read is done, $E1 indicates busy. (usage seems to be to wait till reading is done)
+- `$01` Map SD Card sector data to SRAM.
+- `$03` Map SD Card read status to SRAM. Any SRAM area byte reads `$E1` from the $7FB4 write until the data is in the buffer, then `$01`. (With `$01` the SRAM area also reads `$E1` while busy, then the sector data.)
 
 ### $7FB0, $7FB1, $7FB2, $7FB3: SD Card Sector number
 
@@ -82,14 +84,17 @@ Example:
 
 This register is used to map different things into the SRAM area.
 
-Observed values:
+Only the low 4 bits are used. Values:
 
-- `$00` Unmap SRAM area
-- `$02` Unknown. Used during `stage1`, but SRAM is not accessed afterwards.
-- `$03` Maps SRAM into SRAM area. Contains multiple pages controlled by $4000, but more pages are available. See: [SRAM](#sram) for more details
-- `$04` Maps the FW Version to SRAM area. Any byte in the SRAM area contains the version.
-- `$05` Related to the firmware update. Firmware update data is stored in SD to ROM area, exact process unknown. Could be the trigger that initiates a write.
-- `$06` Maps RTC registers to SRAM area. See [RTC](#rtc)
+- `$00` The SD sector buffer and status, as set by [$7F30](#7f30-sd-card-window-enables). With $7F30 at `$00` nothing from the SD card is mapped.
+- `$01` The `rom area`. Not used by `stage1` or the `kernel`.
+- `$02` The ROM Load command data, while $7F36 bit 0 is set. See [ROM Load data](#rom-load-data). Used by `stage1` to load the `kernel` and by the `kernel` to load a rom.
+- `$03` Maps SRAM into SRAM area. Contains multiple pages controlled by $4000. See: [SRAM](#sram) for more details
+- `$04` Maps the FW Version to SRAM area. Any byte in the SRAM area contains the version: `$04` on FW4, `$05` on FW5. The number is not stored anywhere, it is wired into the FPGA design.
+- `$05` The firmware updater's busy flag, in bit 0. Used by the updater while it writes the FPGA config flash.
+- `$06` and up: Maps RTC registers to SRAM area. See [RTC](#rtc)
+
+Source: the FW4 and FW5 (2021-09-18) FPGA bitstreams, decoded into Verilog and proved equivalent. See [sd_mem_path.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/sd_mem_path.v) and [gb_data_out.v](https://github.com/lukesau/ezgb/blob/main/stage0/fw4/rtl/gb_data_out.v) in the ezgb repo.
 
 ### $7FD0: RTC Update trigger
 
